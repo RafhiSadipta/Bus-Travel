@@ -5,6 +5,11 @@ import KelolaUser from '../pages/User.vue';
 import Login from '../components/Login.vue';
 import Register from '../components/Register.vue';
 import KelolaAgen from '../pages/Agen.vue';
+import KelolaTerminal from '../pages/Terminal.vue';
+import KelolaRute from '../pages/Rute.vue';
+import KelolaFasilitas from '../pages/Fasilitas.vue';
+import KelolaBus from '../pages/Bus.vue';
+import KelolaTiket from '../pages/Tiket.vue';
 
 const routes = [
     { path: '/', component: Login },
@@ -22,6 +27,31 @@ const routes = [
             {
                 path: 'kelola-agen',
                 component: KelolaAgen,
+                meta: { requiresAuth: true, role: 'admin' } // Hanya admin yang bisa akses
+            },
+            {
+                path: 'kelola-terminal',
+                component: KelolaTerminal,
+                meta: { requiresAuth: true, role: 'admin' } // Hanya admin yang bisa akses
+            },
+            {
+                path: 'kelola-rute',
+                component: KelolaRute,
+                meta: { requiresAuth: true, role: 'admin' } // Hanya admin yang bisa akses
+            },
+            {
+                path: 'kelola-fasilitas',
+                component: KelolaFasilitas,
+                meta: { requiresAuth: true, role: 'admin' } // Hanya admin yang bisa akses
+            },
+            {
+                path: 'kelola-bus',
+                component: KelolaBus,
+                meta: { requiresAuth: true, role: 'admin' } // Hanya admin yang bisa akses
+            },
+            {
+                path: 'kelola-tiket',
+                component: KelolaTiket,
                 meta: { requiresAuth: true, role: 'admin' } // Hanya admin yang bisa akses
             }
         ]
