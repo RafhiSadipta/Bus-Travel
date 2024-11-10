@@ -39,23 +39,36 @@ import axios from 'axios';
 
 export default {
   data() {
-    return { email: '', password: '' };
+    return {
+      username: '',
+      password: '',
+      errorMessage: '',
+    };
   },
   methods: {
-    async login() {
-      try {
-        const response = await axios.post('http://localhost:5000/auth/login', {
-          email: this.email,
-          password: this.password,
-        });
-        localStorage.setItem('token', response.data.token);
-        this.$router.push('/dashboard');
-      } catch (error) {
-        console.error(error);
-        alert("Login failed. Please check your credentials.");
+  async login() {
+    try {
+      const response = await axios.post('http://localhost:5000/auth/login', {
+        email: this.email,
+        password: this.password,
+      });
+      
+      const token = response.data.token;
+      localStorage.setItem('token', token);
+
+      // Redirect berdasarkan role setelah login berhasil
+      const userRole = JSON.parse(atob(token.split('.')[1])).role;
+      if (userRole === 'admin') {
+        this.$router.push({ path: '/dashboard' });
+      } else {
+        this.$router.push({ path: '/result' });
       }
+    } catch (error) {
+      this.errorMessage = 'Login gagal. Periksa kredensial Anda.';
+      console.error("Error during login:", error);
     }
-  }
+  },
+},
 };
 </script>
 

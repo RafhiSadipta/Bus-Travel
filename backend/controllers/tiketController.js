@@ -1,10 +1,33 @@
-const { getAllTikets, getTiketById, createTiket, updateTiketById, deleteTiketById } = require('../models/tiketModel');
+const { getAllTikets, getTiketById, createTiket, updateTiketById, deleteTiketById, searchTiketByQuery } = require('../models/tiketModel');
 const { getBusById } = require('../models/busModel');
+const db = require('../db');
 
+// Fungsi pencarian tiket
+const searchTiket = async (req, res) => {
+    const { keberangkatan, tujuan, tanggal } = req.query; // Pastikan ini 'query' bukan 'body' untuk GET
+
+    console.log('Keberangkatan:', keberangkatan);
+    console.log('Tujuan:', tujuan);
+    console.log('Tanggal:', tanggal);
+
+    try {
+        const tikets = await searchTiketByQuery(keberangkatan, tujuan, tanggal);
+        if (tikets.length > 0) {
+            res.status(200).json(tikets);
+        } else {
+            res.status(404).json({ message: 'No tickets found' });
+        }
+    } catch (error) {
+        console.error("Error searching tiket:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Fungsi mendapatkan semua tiket
 const getTikets = async (req, res) => {
     try {
         const tikets = await getAllTikets();
-        console.log("Tikets fetched:", tikets); // Log data tiket yang diambil
+        console.log("Tikets fetched:", tikets);
         res.status(200).json(tikets);
     } catch (error) {
         console.error("Error fetching tikets:", error);
@@ -12,7 +35,7 @@ const getTikets = async (req, res) => {
     }
 };
 
-
+// Fungsi mendapatkan tiket berdasarkan ID
 const getTiket = async (req, res) => {
     const { id } = req.params;
     try {
@@ -27,17 +50,16 @@ const getTiket = async (req, res) => {
     }
 };
 
+// Fungsi pembuatan tiket
 const createTiketHandler = async (req, res) => {
     const { id_agen, id_bus, id_rute, waktu_berangkat, estimasi_sampai, harga } = req.body;
 
     try {
-        // Ambil data bus berdasarkan id_bus untuk mendapatkan kapasitas
         const bus = await getBusById(id_bus);
         if (!bus) {
             return res.status(404).json({ message: 'Bus not found' });
         }
 
-        // Buat tiket dengan kursi_tersedia yang disetel sesuai kapasitas bus
         const newTiket = await createTiket({
             id_agen,
             id_bus,
@@ -45,17 +67,17 @@ const createTiketHandler = async (req, res) => {
             waktu_berangkat,
             estimasi_sampai,
             harga,
-            kursi_tersedia: bus.kapasitas, // Setel kursi_tersedia sama dengan kapasitas bus
+            kursi_tersedia: bus.kapasitas,
         });
 
         res.status(201).json({ message: 'Tiket created successfully', tiket: newTiket });
     } catch (error) {
-        console.error("Error creating tiket:", error); // Log error di backend
+        console.error("Error creating tiket:", error);
         res.status(500).json({ message: 'Server error' });
     }
 };
 
-
+// Fungsi pembaruan tiket
 const updateTiketHandler = async (req, res) => {
     const { id } = req.params;
     const { id_agen, id_bus, id_rute, waktu_berangkat, estimasi_sampai, harga } = req.body;
@@ -67,6 +89,7 @@ const updateTiketHandler = async (req, res) => {
     }
 };
 
+// Fungsi penghapusan tiket
 const deleteTiketHandler = async (req, res) => {
     const { id } = req.params;
     try {
@@ -77,4 +100,4 @@ const deleteTiketHandler = async (req, res) => {
     }
 };
 
-module.exports = { getTikets, getTiket, createTiketHandler, updateTiketHandler, deleteTiketHandler };
+module.exports = { getTikets, getTiket, createTiketHandler, updateTiketHandler, deleteTiketHandler, searchTiket };
