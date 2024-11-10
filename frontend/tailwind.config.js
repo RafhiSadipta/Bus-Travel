@@ -11,7 +11,11 @@ module.exports = {
                 "dark-green-50": "rgba(4, 25, 34, 0.5)",
                 "green": "#10cf93",
                 "white": "#fff",
-                "dark-green": "#041922"
+                "dark-green": "#041922",
+                "pastel-yellow": "#f5d372",
+                "green-20": "rgba(16, 207, 147, 0.2)",
+                "pastel-red": "#f7665e",
+                "white-30": "rgba(255, 255, 255, 0.7)",
             },
             "spacing": {},
             "fontFamily": {

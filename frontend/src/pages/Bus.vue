@@ -1,44 +1,69 @@
-<template>
-    <div>
-        <h2>Kelola Bus</h2>
-        <form @submit.prevent="createOrUpdateBus">
-            <label>Jenis Bus:</label>
-            <input v-model="newBus.jenis" placeholder="Jenis Bus (Eksekutif, Double Decker, dll.)" required />
-
-            <label>Kapasitas:</label>
-            <input v-model="newBus.kapasitas" type="number" placeholder="Kapasitas Bus" required />
-
-            <label>Fasilitas:</label>
-            <div class="fasilitas-list">
-                <div v-for="fasilitas in fasilitasList" :key="fasilitas.id">
-                    <input type="checkbox" :value="fasilitas.id" v-model="selectedFasilitas" />
-                    <span>{{ fasilitas.nama }}</span>
+<template enter-class="w-screen h-screen">
+    <div
+        class="self-stretch relative flex flex-col items-center justify-start py-8 px-16 box-border gap-8 text-left text-12xl">
+        <h3>Bus Management</h3>
+        <form @submit.prevent="createOrUpdateBus" class="flex flex-col items-center gap-2 w-1/2">
+            <div class="flex flex-row gap-2 w-full">
+                <div class="w-full rounded-81xl bg-white flex items-center justify-start py-3 px-[1.875rem] box-border">
+                    <input v-model="newBus.jenis" placeholder="Jenis Bus" required
+                        class="w-full bg-transparent border-none outline-none font-semibold text-sm" />
+                </div>
+                <div class="w-full rounded-81xl bg-white flex items-center justify-start py-3 px-[1.875rem] box-border">
+                    <input v-model="newBus.kapasitas" type="number" placeholder="Kapasitas Bus" required
+                        class="w-full bg-transparent border-none outline-none font-semibold text-sm" />
+                </div>
+            </div>
+            <div class="flex flex-col gap-2 w-full">
+                <label class="font-semibold text-sm text-center">Fasilitas</label>
+                <div class="fasilitas-list w-full bg-white rounded-2xl py-3 px-4 box-border">
+                    <div v-for="fasilitas in fasilitasList" :key="fasilitas.id" class="flex items-center gap-2 mb-2">
+                        <input type="checkbox" :value="fasilitas.id" v-model="selectedFasilitas"
+                            class="w-4 h-4 border border-gray-300 rounded focus:ring-2 focus:ring-green-500" />
+                        <span class="text-sm font-semibold">{{ fasilitas.nama }}</span>
+                    </div>
                 </div>
             </div>
 
-            <button type="submit">{{ isEditing ? "Perbarui Bus" : "Tambah Bus" }}</button>
+            <div class="flex flex-row gap-2 w-3/4">
+            <button type="submit"
+                class="w-full rounded-81xl bg-green-600 flex items-center justify-center py-3 px-8 bg-green text-white font-semibold text-sm">
+                {{ isEditing ? "Perbarui Bus" : "Tambah Bus" }}
+            </button>
+            <btn v-if="isEditing" type="button" @click="cancelEdit"
+                class="w-full button rounded-81xl bg-pastel-red flex items-center justify-center py-3 px-8 text-white text-sm">
+                <b class="flex-1 text-center">Cancel</b>
+            </btn>
+        </div>
         </form>
+
 
         <p v-if="message" :class="{ success: isSuccess, error: !isSuccess }">{{ message }}</p>
 
-        <h3>Daftar Bus</h3>
-        <table v-if="busList.length > 0">
+        <table v-if="busList.length > 0"
+            class="self-stretch border-collapse rounded-2xl overflow-hidden shadow-md border-dark-green">
             <thead>
-                <tr>
-                    <th>Jenis Bus</th>
-                    <th>Kapasitas</th>
-                    <th>Fasilitas</th>
-                    <th>Aksi</th>
+                <tr class="bg-dark-green">
+                    <th class="p-4">Jenis Bus</th>
+                    <th class="p-4">Kapasitas</th>
+                    <th class="p-4">Fasilitas</th>
+                    <th class="p-4">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="bus in busList" :key="bus.id">
-                    <td>{{ bus.jenis }}</td>
-                    <td>{{ bus.kapasitas }}</td>
-                    <td>{{ bus.fasilitas || 'Tidak ada fasilitas' }}</td>
-                    <td>
-                        <button @click="editBus(bus)">Edit</button>
-                        <button @click="deleteBus(bus.id)">Hapus</button>
+                <tr v-for="(bus, index) in busList" :key="bus.id"
+                    :class="index % 2 === 0 ? 'bg-green-20' : 'bg-white-30'">
+                    <td class="p-4">{{ bus.jenis }}</td>
+                    <td class="p-4">{{ bus.kapasitas }}</td>
+                    <td class="p-4">{{ bus.fasilitas || 'Tidak ada fasilitas' }}</td>
+                    <td class="p-4">
+                        <btn @click="editBus(bus)"
+                            class="bg-pastel-yellow text-white font-bold text-sm px-4 py-2 rounded-31xl">
+                            Edit
+                        </btn>
+                        <btn @click="deleteBus(bus.id)"
+                            class="bg-pastel-red text-white font-bold text-sm px-4 py-2 rounded-31xl">
+                            Hapus
+                        </btn>
                     </td>
                 </tr>
             </tbody>
@@ -153,93 +178,9 @@ export default {
             this.isEditing = true;
             this.editingBusId = bus.id;
         },
+        cancelEdit() {
+            this.resetForm();
+        },
     },
 };
 </script>
-
-<style scoped>
-.success {
-    color: green;
-}
-
-.error {
-    color: red;
-}
-
-form {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 400px;
-}
-
-form input,
-form button,
-form textarea {
-    padding: 10px;
-    font-size: 16px;
-}
-
-form button {
-    cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-}
-
-form button:hover {
-    background-color: #45a049;
-}
-
-.fasilitas-list {
-    display: flex;
-    flex-direction: column;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-table,
-th,
-td {
-    border: 1px solid #ddd;
-}
-
-th,
-td {
-    padding: 12px;
-    text-align: left;
-}
-
-th {
-    background-color: #4CAF50;
-    color: white;
-}
-
-tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-tbody tr:hover {
-    background-color: #ddd;
-}
-
-button {
-    padding: 5px 10px;
-    margin: 0 5px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-</style>

@@ -1,4 +1,4 @@
-<template>
+<template enter-class="w-screen h-screen">
     <div class="home">
       <h1>Selamat Datang di Travel Bus</h1>
       <form @submit.prevent="cariTiket">

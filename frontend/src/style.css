@@ -12,6 +12,51 @@ body {
 }
 
 
+:root {
+  background-color: #eaeaea;
+  color: #041922;
+  font-family: 'Montserrat', sans-serif;
+  text-decoration: none;
+}
+
+th {
+  font-weight: 'bold';
+  text-align: center;
+  font-size: 1rem;
+  background-color: #041922;
+  border: 1px solid #041922;
+  color: #10CF93;
+  padding: 1rem;           
+  align-self: stretch;     
+  flex-shrink: 0;          
+  width: auto; 
+  text-transform: uppercase;
+}
+
+td {
+  font-size: 0.875rem;        
+  color: rgba(4, 25, 34, 0.7);    
+  font-weight: 600; 
+  border: 1px solid #041922;
+  gap: 0.5rem
+}
+
+btn {
+  cursor: pointer;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+button {
+  border: none;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #ffffff;
+}
+
+input {
+  cursor: text;
+}
 
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

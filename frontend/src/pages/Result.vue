@@ -1,4 +1,4 @@
-<template>
+<template enter-class="w-screen h-screen">
     <div class="result">
       <h2>Hasil Pencarian Tiket</h2>
       <form @submit.prevent="cariTiket">

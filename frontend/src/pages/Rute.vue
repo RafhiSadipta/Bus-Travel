@@ -1,44 +1,74 @@
-<template>
-    <div>
-        <h2>Kelola Rute</h2>
-        <form @submit.prevent="createOrUpdateRute">
-            <label>Terminal Awal:</label>
-            <select v-model="newRute.id_terminal_awal" required>
-                <option v-for="terminal in filteredTerminals" :key="terminal.id" :value="terminal.id">
-                    {{ terminal.nama }} - {{ terminal.kota }}
-                </option>
-            </select>
+<template enter-class="w-screen h-screen">
+    <div
+        class="self-stretch relative flex flex-col items-center justify-start py-8 px-16 box-border gap-8 text-left text-12xl">
+        <h3>Route Management</h3>
+        <form @submit.prevent="createOrUpdateRute" class="flex flex-col items-center gap-4">
+            <div class="flex flex-row gap-2">
+                    <div
+                        class="w-full rounded-81xl bg-white flex flex-row items-center justify-start py-3 px-[1.875rem] box-border">
+                        <select v-model="newRute.id_terminal_awal" required
+                            class="w-full bg-transparent border-none outline-none font-semibold text-sm">
+                            <option value="" disabled selected>Terminal Awal</option>
+                            <option v-for="terminal in filteredTerminals" :key="terminal.id" :value="terminal.id">
+                                {{ terminal.nama }} - {{ terminal.kota }}
+                            </option>
+                        </select>
+                    </div>
 
-            <label>Terminal Akhir:</label>
-            <select v-model="newRute.id_terminal_akhir" required>
-                <option v-for="terminal in filteredTerminals" :key="terminal.id" :value="terminal.id">
-                    {{ terminal.nama }} - {{ terminal.kota }}
-                </option>
-            </select>
-
-            <button type="submit">{{ isEditing ? "Perbarui Rute" : "Tambah Rute" }}</button>
+                <!-- Terminal Akhir -->
+                    <div
+                        class="w-full rounded-81xl bg-white flex flex-row items-center justify-start py-3 px-[1.875rem] box-border">
+                        <select v-model="newRute.id_terminal_akhir" required
+                            class="w-full bg-transparent border-none outline-none font-semibold text-sm">
+                            <option value="" disabled selected>Terminal Akhir</option>
+                            <option v-for="terminal in filteredTerminals" :key="terminal.id" :value="terminal.id">
+                                {{ terminal.nama }} - {{ terminal.kota }}
+                            </option>
+                        </select>
+                    </div>
+            </div>
+            <!-- Submit Button -->
+            <div class="flex flex-row gap-2 w-3/4">
+                <button type="submit"
+                    class="w-full rounded-81xl bg-green-600 flex items-center justify-center py-3 px-8 bg-green text-white font-semibold text-sm">
+                    {{ isEditing ? "Perbarui Rute" : "Tambah Rute" }}
+                </button>
+                <btn v-if="isEditing" type="button" @click="cancelEdit"
+                    class="w-full button rounded-81xl bg-pastel-red flex items-center justify-center py-3 px-8 text-white text-sm">
+                    <b class="flex-1 text-center">Cancel</b>
+                </btn>
+            </div>
         </form>
+
 
         <p v-if="message" :class="{ success: isSuccess, error: !isSuccess }">{{ message }}</p>
 
-        <h3>Daftar Rute</h3>
-        <input v-model="searchTerm" @input="filterTerminals" placeholder="Cari terminal..." />
+        <!-- <h3>Daftar Rute</h3>
+        <input v-model="searchTerm" @input="filterTerminals" placeholder="Cari terminal..." /> -->
 
-        <table v-if="rutes.length > 0">
+        <table v-if="rutes.length > 0"
+            class="self-stretch border-collapse rounded-2xl overflow-hidden shadow-md border-dark-green">
             <thead>
-                <tr>
-                    <th>Terminal Awal</th>
-                    <th>Terminal Akhir</th>
-                    <th>Aksi</th>
+                <tr class="bg-dark-green">
+                    <th class="p-4">Terminal Awal</th>
+                    <th class="p-4">Terminal Akhir</th>
+                    <th class="p-4">Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="rute in rutes" :key="rute.id">
-                    <td>{{ rute.terminal_awal_nama }} ({{ rute.terminal_awal_kota }})</td>
-                    <td>{{ rute.terminal_akhir_nama }} ({{ rute.terminal_akhir_kota }})</td>
-                    <td>
-                        <button @click="editRute(rute)">Edit</button>
-                        <button @click="deleteRute(rute.id)">Hapus</button>
+                <tr v-for="(rute, index) in rutes" :key="rute.id"
+                    :class="index % 2 === 0 ? 'bg-green-20' : 'bg-white-30'">
+                    <td class="p-4">{{ rute.terminal_awal_nama }} ({{ rute.terminal_awal_kota }})</td>
+                    <td class="p-4">{{ rute.terminal_akhir_nama }} ({{ rute.terminal_akhir_kota }})</td>
+                    <td class="p-4">
+                        <btn @click="editRute(rute)"
+                            class="bg-pastel-yellow text-white font-bold text-sm px-4 py-2 rounded-31xl">
+                            Edit
+                        </btn>
+                        <btn @click="deleteRute(rute.id)"
+                            class="bg-pastel-red text-white font-bold text-sm px-4 py-2 rounded-31xl">
+                            Hapus
+                        </btn>
                     </td>
                 </tr>
             </tbody>
@@ -150,88 +180,9 @@ export default {
                 `${terminal.nama} - ${terminal.kota}`.toLowerCase().includes(searchTermLower)
             );
         },
+        cancelEdit() {
+            this.resetForm(); // Mengatur ulang form dan keluar dari mode edit
+        },
     },
 };
 </script>
-
-<style scoped>
-.success {
-    color: green;
-}
-
-.error {
-    color: red;
-}
-
-form {
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-width: 400px;
-}
-
-form input,
-form select,
-form button {
-    padding: 10px;
-    font-size: 16px;
-}
-
-form button {
-    cursor: pointer;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-}
-
-form button:hover {
-    background-color: #45a049;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-table,
-th,
-td {
-    border: 1px solid #ddd;
-}
-
-th,
-td {
-    padding: 12px;
-    text-align: left;
-}
-
-th {
-    background-color: #4CAF50;
-    color: white;
-}
-
-tbody tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-tbody tr:hover {
-    background-color: #ddd;
-}
-
-button {
-    padding: 5px 10px;
-    margin: 0 5px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #45a049;
-}
-</style>
