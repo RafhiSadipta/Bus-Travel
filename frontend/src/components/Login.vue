@@ -1,44 +1,67 @@
 <template>
-    <div>
-      <h1>Login</h1>
-      <form @submit.prevent="login">
-        <input v-model="email" placeholder="Email" required />
-        <input v-model="password" type="password" placeholder="Password" required />
-        <button type="submit">Login</button>
-      </form>
-      <p>
-        Belum punya akun? 
-        <router-link to="/register">Daftar di sini</router-link>
-      </p>
+  <div
+    class="login-page relative flex flex-col items-center justify-center bg-[url('./assets/login-bg.jpg')] bg-cover bg-no-repeat bg-[top] text-left text-[24px] text-dark-green-50 font-montserrat">
+    <div class="absolute inset-0 bg-dark-green-50"></div>
+    <div
+      class="h-[382px] [backdrop-filter:blur(50px)] rounded-2xl bg-grey-60 flex flex-col items-center justify-center py-10 px-8 gap-8">
+      <div class="flex flex-col items-start justify-start text-center text-dark-green">
+        <b class="relative">Login</b>
+      </div>
+      <div class="w-[380px] h-[382px] flex flex-col items-center justify-center gap-8 text-base">
+        <div class="flex flex-col items-start justify-start gap-4">
+          <div
+            class="w-[380px] rounded-81xl bg-white h-12 flex flex-row items-center justify-start py-3.5 px-[30px] box-border">
+            <input type="email" placeholder="Email" v-model="email"
+              class="w-full bg-transparent border-none outline-none font-semibold text-base" />
+          </div>
+          <div class="self-stretch rounded-81xl bg-white flex flex-row items-center justify-start py-3.5 px-[30px]">
+            <input type="password" placeholder="Password" v-model="password"
+              class="w-full bg-transparent border-none outline-none font-semibold text-base" />
+          </div>
+        </div>
+        <btn @click="login"
+          class="self-stretch rounded-81xl bg-green flex flex-row items-center justify-center py-3.5 px-[30px] text-center text-white cursor-pointer">
+          <b class="flex-1 relative">START TRAVELING</b>
+        </btn>
+      </div>
+      <router-link to="/register">
+        <div
+          class="relative text-[14px] font-semibold cursor-pointer text-dark-green-50 underline decoration-dark-green-50">
+          Don’t have an account yet? Create one now</div>
+      </router-link>
     </div>
-  </template>
-  
-  <script>
-  import axios from 'axios';
-  
-  export default {
-    data() {
-      return { email: '', password: '' };
-    },
-    methods: {
-      async login() {
-        try {
-          const response = await axios.post('http://localhost:5000/auth/login', {
-            email: this.email,
-            password: this.password,
-          });
-          localStorage.setItem('token', response.data.token);
-          this.$router.push('/dashboard');
-        } catch (error) {
-          console.error(error);
-          alert("Login failed. Please check your credentials.");
-        }
+  </div>
+</template>
+
+
+<script>
+import axios from 'axios';
+
+export default {
+  data() {
+    return { email: '', password: '' };
+  },
+  methods: {
+    async login() {
+      try {
+        const response = await axios.post('http://localhost:5000/auth/login', {
+          email: this.email,
+          password: this.password,
+        });
+        localStorage.setItem('token', response.data.token);
+        this.$router.push('/dashboard');
+      } catch (error) {
+        console.error(error);
+        alert("Login failed. Please check your credentials.");
       }
     }
-  };
-  </script>
-  
-  <style scoped>
-  /* Tambahkan styling sesuai kebutuhan */
-  </style>
-  
+  }
+};
+</script>
+
+<style scoped>
+/* Tambahkan styling sesuai kebutuhan */
+.login-page {
+  min-height: 100vh;
+}
+</style>

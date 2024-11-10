@@ -1,37 +1,30 @@
 <template>
-  <div>
-    <header>
-      <h1>My Application</h1>
-      <nav>
-        <router-link to="/dashboard">Dashboard</router-link>
-        <router-link v-if="isAdmin" to="/kelola-user">Kelola User</router-link>
-        <router-link v-if="isAdmin" to="/kelola-agen">Kelola Agen</router-link>
-        <router-link v-if="isAdmin" to="/kelola-terminal">Kelola Terminal</router-link>
-        <router-link v-if="isAdmin" to="/kelola-rute">Rute</router-link>
-        <router-link v-if="isAdmin" to="/kelola-fasilitas">Fasilitas</router-link>
-        <router-link v-if="isAdmin" to="/kelola-bus">Bus</router-link>
-        <router-link v-if="isAdmin" to="/kelola-tiket">Tiket</router-link>
-        <button @click="logout">Logout</button>
-      </nav>
-    </header>
-    <main>
-      <router-view></router-view>
-    </main>
+  <div
+    class="w-full relative bg-dark-green h-[92px] overflow-hidden shrink-0 flex flex-row items-center justify-between py-2.5 px-8 box-border text-left text-base text-green font-montserrat">
+    <div class="w-[262px] relative h-12">
+      <router-link to="/dashboard">
+        <img src="..\assets\logo.png" alt="logo" class="cursor-pointer" />
+      </router-link> 
+    </div>
+    <div class="flex flex-row items-center justify-start gap-2 text-white">
+      <btn @click="profile"
+        class="rounded-31xl bg-green flex flex-row items-center justify-center py-3.5 px-[30px] cursor-pointer">
+        <b class="relative">PROFILE</b>
+      </btn>
+      <btn @click="logout"
+        class="rounded-31xl flex flex-row items-center justify-center py-3.5 px-[30px] text-green cursor-pointer">
+        <b class="relative">LOGOUT</b>
+      </btn>
+    </div>
   </div>
+  <main>
+    <router-view></router-view>
+  </main>
 </template>
+
 
 <script>
 export default {
-  computed: {
-    isAdmin() {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const role = JSON.parse(atob(token.split('.')[1])).role;
-        return role === 'admin';
-      }
-      return false;
-    }
-  },
   methods: {
     logout() {
       localStorage.removeItem('token');
@@ -40,28 +33,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-header {
-  background-color: #f4f4f4;
-  padding: 10px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-nav {
-  display: flex;
-  gap: 10px;
-}
-
-nav a {
-  text-decoration: none;
-  color: #333;
-}
-
-nav button {
-  cursor: pointer;
-  padding: 5px 10px;
-}
-</style>
