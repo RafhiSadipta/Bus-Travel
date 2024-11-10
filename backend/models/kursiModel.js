@@ -1,14 +1,18 @@
+// kursiModel.js
 const db = require('../db');
 
 const createKursi = (kursiData) => db('kursi').insert(kursiData);
 
-const getKursiByTiketId = (id_tiket) => db('kursi').where({ id_tiket });
+// Update this function to only retrieve available seats
+const getAvailableKursiByTiketId = (id_tiket) =>
+    db('kursi')
+        .where({ id_tiket: id_tiket, status: true });
 
-const updateKursiStatus = (kode_kursi, status) =>
-    db('kursi').where({ kode_kursi }).update({ status });
+const updateKursiStatus = (id_kursi, status) =>
+    db('kursi').where({ id: id_kursi }).update({ status });
 
 module.exports = {
     createKursi,
-    getKursiByTiketId,
+    getAvailableKursiByTiketId,
     updateKursiStatus
 };

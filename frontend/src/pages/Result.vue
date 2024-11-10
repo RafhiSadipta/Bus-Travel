@@ -1,4 +1,4 @@
-<template enter-class="w-screen h-screen">
+<template>
     <div class="result">
       <h2>Hasil Pencarian Tiket</h2>
       <form @submit.prevent="cariTiket">
@@ -29,6 +29,7 @@
               <strong>Tanggal:</strong> {{ formatDate(tiket.waktu_berangkat) }}<br />
               <strong>Harga:</strong> Rp {{ formatHarga(tiket.harga) }}
             </p>
+            <button @click="pesanTiket(tiket.id)">Pesan Tiket</button>
           </li>
         </ul>
       </div>
@@ -49,15 +50,13 @@
       };
     },
     created() {
-      // Check if there are query parameters to perform a search or load all tickets if no search parameters exist
       if (this.keberangkatan || this.tujuan || this.tanggal) {
-        this.fetchTikets(); // Fetch tickets based on search criteria
+        this.fetchTikets();
       } else {
-        this.fetchAllTikets(); // Load all tickets if no search criteria provided
+        this.fetchAllTikets();
       }
     },
     methods: {
-      // Function to fetch all tickets
       async fetchAllTikets() {
         try {
           const response = await axios.get('http://localhost:5000/api/tikets');
@@ -66,7 +65,6 @@
           console.error("Error fetching all tikets:", error);
         }
       },
-      // Function to fetch tickets based on search criteria
       async fetchTikets() {
         try {
           const response = await axios.get('http://localhost:5000/api/tikets/search', {
@@ -81,7 +79,6 @@
           console.error("Error fetching tiket:", error);
         }
       },
-      // Function to handle search submission
       cariTiket() {
         if (this.keberangkatan && this.tujuan) {
           this.$router.push({
@@ -91,9 +88,8 @@
               tujuan: this.tujuan.toUpperCase(),
               tanggal: this.tanggal || null,
             },
-          }).then(() => {
-            this.fetchTikets(); // Call fetchTikets after route update
           });
+          // No need to call fetchTikets here, as the page reload will trigger it
         } else {
           alert("Keberangkatan dan tujuan tidak boleh kosong!");
         }
@@ -108,10 +104,12 @@
       formatHarga(harga) {
         return harga.toLocaleString('id-ID');
       },
+      pesanTiket(tiketId) {
+      this.$router.push({ name: 'transaksi', params: { id: tiketId } });
+    },
     },
   };
   </script>
-  
   
   <style scoped>
   /* Tambahkan CSS styling sesuai kebutuhan */

@@ -15,5 +15,13 @@ const getRuteById = (id) => db('rute').where({ id }).first();
 const createRute = (rute) => db('rute').insert(rute);
 const updateRuteById = (id, rute) => db('rute').where({ id }).update(rute);
 const deleteRuteById = (id) => db('rute').where({ id }).del();
+const findRuteByKeberangkatanTujuan = async (keberangkatan, tujuan) => {
+    return db('rute')
+        .select('rute.id')
+        .join('terminal as awal', 'rute.id_terminal_awal', 'awal.id')
+        .join('terminal as akhir', 'rute.id_terminal_akhir', 'akhir.id')
+        .whereRaw('LOWER(awal.kota) = ?', keberangkatan.toLowerCase())
+        .andWhereRaw('LOWER(akhir.kota) = ?', tujuan.toLowerCase());
+};
 
-module.exports = { getAllRutes, getRuteById, createRute, updateRuteById, deleteRuteById };
+module.exports = { getAllRutes, getRuteById, createRute, updateRuteById, deleteRuteById, findRuteByKeberangkatanTujuan };

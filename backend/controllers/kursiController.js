@@ -1,5 +1,5 @@
 const { getTiketById } = require('../models/tiketModel');
-const { createKursi } = require('../models/kursiModel');
+const { createKursi, getAvailableKursiByTiketId } = require('../models/kursiModel');
 const db = require('../db');
 
 // Fungsi untuk generate kursi berdasarkan tiket
@@ -64,4 +64,16 @@ const getKursiByTiketId = async (req, res) => {
     }
 };
 
-module.exports = { generateKursi, getKursiByTiketId };
+// Retrieve only available seats for a specific ticket ID
+const getAvailableKursi = async (req, res) => {
+    const { id_tiket } = req.params;
+    try {
+        const availableKursi = await getAvailableKursiByTiketId(id_tiket);
+        res.status(200).json(availableKursi);
+    } catch (error) {
+        console.error("Error fetching available seats:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+module.exports = { generateKursi, getKursiByTiketId, getAvailableKursi };

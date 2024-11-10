@@ -1,6 +1,8 @@
 <template enter-class="w-screen h-screen">
     <div class="home">
       <h1>Selamat Datang di Travel Bus</h1>
+      
+      <!-- Search Form -->
       <form @submit.prevent="cariTiket">
         <div class="form-group">
           <label>Dari</label>
@@ -16,6 +18,9 @@
         </div>
         <button type="submit">Cari Tiket</button>
       </form>
+      
+      <!-- Login Button -->
+      <button @click="goToLogin" class="login-button">Login</button>
     </div>
   </template>
   
@@ -31,12 +36,12 @@
     methods: {
       cariTiket() {
         if (!this.isLoggedIn()) {
-          // Arahkan ke login dan hentikan proses pencarian
+          // Redirect to login and stop the search process
           this.$router.push('/login');
           return;
         }
         
-        // Jika sudah login, lanjutkan ke halaman result dengan parameter pencarian
+        // If logged in, proceed to the result page with search parameters
         this.$router.push({
           name: 'result',
           query: {
@@ -49,7 +54,27 @@
       isLoggedIn() {
         return !!localStorage.getItem('token');
       },
+      goToLogin() {
+        this.$router.push('/login');
+      }
     },
   };
   </script>
+  
+  <style scoped>
+  .login-button {
+    background-color: #4CAF50; /* Green background */
+    color: white;              /* White text */
+    padding: 10px 20px;        /* Some padding */
+    margin-top: 20px;          /* Spacing above button */
+    border: none;              /* Remove border */
+    cursor: pointer;           /* Pointer cursor on hover */
+    font-size: 16px;           /* Button text size */
+    border-radius: 5px;        /* Rounded corners */
+  }
+  
+  .login-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+  }
+  </style>
   

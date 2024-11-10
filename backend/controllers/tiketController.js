@@ -1,17 +1,22 @@
-const { getAllTikets, getTiketById, createTiket, updateTiketById, deleteTiketById, searchTiketByQuery } = require('../models/tiketModel');
+const { getAllTikets, getTiketById, createTiket, updateTiketById, deleteTiketById, getTiketsByRuteId } = require('../models/tiketModel');
+const { findRuteByKeberangkatanTujuan } = require('../models/ruteModel');
 const { getBusById } = require('../models/busModel');
 const db = require('../db');
 
-// Fungsi pencarian tiket
 const searchTiket = async (req, res) => {
-    const { keberangkatan, tujuan, tanggal } = req.query; // Pastikan ini 'query' bukan 'body' untuk GET
-
-    console.log('Keberangkatan:', keberangkatan);
-    console.log('Tujuan:', tujuan);
-    console.log('Tanggal:', tanggal);
+    const { keberangkatan, tujuan, tanggal } = req.query;
+    console.log("Search parameters:", { keberangkatan, tujuan, tanggal });
 
     try {
-        const tikets = await searchTiketByQuery(keberangkatan, tujuan, tanggal);
+        const ruteResults = await findRuteByKeberangkatanTujuan(keberangkatan, tujuan);
+
+        if (ruteResults.length === 0) {
+            return res.status(404).json({ message: 'Route not found' });
+        }
+
+        const ruteId = ruteResults[0].id;
+        const tikets = await getTiketsByRuteId(ruteId, tanggal);
+
         if (tikets.length > 0) {
             res.status(200).json(tikets);
         } else {

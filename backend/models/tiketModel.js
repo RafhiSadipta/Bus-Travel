@@ -29,7 +29,7 @@ const updateTiketById = (id, tiketData) => db('tiket').where({ id }).update(tike
 
 const deleteTiketById = (id) => db('tiket').where({ id }).del();
 
-const searchTiketByQuery = (keberangkatan, tujuan, tanggal) => {
+const getTiketsByRuteId = (ruteId, tanggal) => {
     let query = db('tiket')
         .select(
             'tiket.*',
@@ -44,17 +44,11 @@ const searchTiketByQuery = (keberangkatan, tujuan, tanggal) => {
         .join('bus', 'tiket.id_bus', 'bus.id')
         .join('rute', 'tiket.id_rute', 'rute.id')
         .join('terminal as awal', 'rute.id_terminal_awal', 'awal.id')
-        .join('terminal as akhir', 'rute.id_terminal_akhir', 'akhir.id');
+        .join('terminal as akhir', 'rute.id_terminal_akhir', 'akhir.id')
+        .where('tiket.id_rute', ruteId);
 
-    if (keberangkatan) {
-        query = query.whereRaw('LOWER(awal.kota) = ?', keberangkatan.toLowerCase());
-    }
-    if (tujuan) {
-        query = query.whereRaw('LOWER(akhir.kota) = ?', tujuan.toLowerCase());
-    }
     if (tanggal) {
-        query = query.where('tiket.waktu_berangkat', '>=', tanggal)
-            .andWhere('tiket.waktu_berangkat', '<', `${tanggal} 23:59:59`);
+        query = query.whereRaw("DATE(tiket.waktu_berangkat) = ?", [tanggal]);
     }
 
     return query;
@@ -66,5 +60,5 @@ module.exports = {
     createTiket,
     updateTiketById,
     deleteTiketById,
-    searchTiketByQuery,
+    getTiketsByRuteId,
 };

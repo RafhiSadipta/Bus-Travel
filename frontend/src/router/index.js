@@ -14,6 +14,8 @@ import KelolaBus from '../pages/Bus.vue';
 import KelolaTiket from '../pages/Tiket.vue';
 import KelolaKursi from '../pages/Kursi.vue';
 import KelolaTransaksi from '../pages/Transaksi.vue';
+import Transaksi from '../pages/TransaksiClient.vue';
+import History from '../pages/History.vue';
 
 const routes = [
     { path: '/', component: Home },
@@ -25,6 +27,8 @@ const routes = [
         children: [
             { path: 'dashboard', component: Dashboard, meta: { requiresAuth: true } },
             { path: 'result', component: Result, meta: { requiresAuth: true }, name: 'result' },
+            { path: 'history', component: History, meta: { requiresAuth: true, role: 'user' }, name: 'history' },
+            { path: '/transaksi/:id', name: 'transaksi', component: Transaksi, meta: { requiresAuth: true, role: 'user' } },
             {
                 path: 'kelola-user',
                 component: KelolaUser,
