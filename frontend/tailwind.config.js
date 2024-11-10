@@ -18,14 +18,16 @@ module.exports = {
                 "montserrat": "Montserrat"
             },
             "borderRadius": {
-                "31xl": "50px",
-                "81xl": "100px"
+                "31xl": "3.125rem", // 50px to rem
+                "81xl": "6.25rem" // 100px to rem
             }
         },
         "fontSize": {
-            "base": "16px",
-            "12xl": "28px",
-            "13xl": "32px",
+            "sm": "0.875rem", // 14px to rem
+            "base": "1rem", // 16px to rem
+            "lg": "1.5rem", // 24px to rem
+            "12xl": "1.75rem", // 28px to rem
+            "13xl": "2rem", // 32px to rem
             "inherit": "inherit"
         }
     },

@@ -1,7 +1,7 @@
 Frame 10
-<template>
+<template enter-class="h-screen w-screen">
   <div
-    class="admin-home relative flex flex-row items-center justify-center py-8 px-16 box-border gap-8 text-left text-12xl text-dark-green bg-grey font-montserrat">
+    class="flex flex-row items-center justify-center py-8 px-16 box-border gap-8 text-left text-12xl text-dark-green bg-grey font-montserrat">
     <div
       class="self-stretch flex-1 overflow-hidden flex flex-col items-start justify-start gap-8">
       <router-link to="/kelola-user" class="self-stretch no-underline text-dark-green">
@@ -100,7 +100,5 @@ export default {
 </script>
 
 <style scoped>
-.admin-home {
-  height: calc(100vh - 92px);
-}
+
 </style>
