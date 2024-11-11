@@ -18,14 +18,14 @@ import Transaksi from '../pages/TransaksiClient.vue';
 import History from '../pages/History.vue';
 
 const routes = [
-    { path: '/', component: Home },
+    { path: '/', component: Home },            
     { path: '/login', component: Login },
     { path: '/register', component: Register },
     {
         path: '/',
         component: AppLayout,
         children: [
-            { path: 'dashboard', component: Dashboard, meta: { requiresAuth: true } },
+            { path: 'dashboard', component: Dashboard, meta: { requiresAuth: true, role:'admin' }  },
             { path: 'result', component: Result, meta: { requiresAuth: true }, name: 'result' },
             { path: 'history', component: History, meta: { requiresAuth: true, role: 'user' }, name: 'history' },
             { path: '/transaksi/:id', name: 'transaksi', component: Transaksi, meta: { requiresAuth: true, role: 'user' } },

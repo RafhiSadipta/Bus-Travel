@@ -37,7 +37,7 @@
           <b class="flex-1 relative">Register</b>
         </btn>
       </div>
-      <router-link to="/">
+      <router-link to="/login">
         <div
           class="link relative text-sm font-semibold cursor-pointer text-dark-green-50 no-underline">
           Already have an account? Click here to login</div>
