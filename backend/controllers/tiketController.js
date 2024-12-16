@@ -3,6 +3,7 @@ const { findRuteByKeberangkatanTujuan } = require('../models/ruteModel');
 const { getBusById } = require('../models/busModel');
 const db = require('../db');
 
+// Fungsi pencarian tiket berdasarkan keberangkatan, tujuan, dan tanggal
 const searchTiket = async (req, res) => {
     const { keberangkatan, tujuan, tanggal } = req.query;
     console.log("Search parameters:", { keberangkatan, tujuan, tanggal });
@@ -28,7 +29,7 @@ const searchTiket = async (req, res) => {
     }
 };
 
-// Fungsi mendapatkan semua tiket
+// Fungsi untuk mendapatkan semua tiket
 const getTikets = async (req, res) => {
     try {
         const tikets = await getAllTikets();
@@ -40,7 +41,7 @@ const getTikets = async (req, res) => {
     }
 };
 
-// Fungsi mendapatkan tiket berdasarkan ID
+// Fungsi untuk mendapatkan tiket berdasarkan ID
 const getTiket = async (req, res) => {
     const { id } = req.params;
     try {
@@ -55,7 +56,7 @@ const getTiket = async (req, res) => {
     }
 };
 
-// Fungsi pembuatan tiket
+// Fungsi untuk membuat tiket baru
 const createTiketHandler = async (req, res) => {
     const { id_agen, id_bus, id_rute, waktu_berangkat, estimasi_sampai, harga } = req.body;
 
@@ -72,7 +73,7 @@ const createTiketHandler = async (req, res) => {
             waktu_berangkat,
             estimasi_sampai,
             harga,
-            kursi_tersedia: bus.kapasitas,
+            kursi_tersedia: bus.kapasitas,  // Kursi yang tersedia berdasarkan kapasitas bus
         });
 
         res.status(201).json({ message: 'Tiket created successfully', tiket: newTiket });
@@ -82,7 +83,7 @@ const createTiketHandler = async (req, res) => {
     }
 };
 
-// Fungsi pembaruan tiket
+// Fungsi untuk memperbarui tiket
 const updateTiketHandler = async (req, res) => {
     const { id } = req.params;
     const { id_agen, id_bus, id_rute, waktu_berangkat, estimasi_sampai, harga } = req.body;
@@ -94,7 +95,7 @@ const updateTiketHandler = async (req, res) => {
     }
 };
 
-// Fungsi penghapusan tiket
+// Fungsi untuk menghapus tiket
 const deleteTiketHandler = async (req, res) => {
     const { id } = req.params;
     try {
@@ -105,4 +106,45 @@ const deleteTiketHandler = async (req, res) => {
     }
 };
 
-module.exports = { getTikets, getTiket, createTiketHandler, updateTiketHandler, deleteTiketHandler, searchTiket };
+// Fungsi untuk memesan tiket dan mengurangi jumlah kursi yang tersedia
+const pesanTiket = async (req, res) => {
+    const { id_tiket } = req.body;  // ID tiket yang dipesan
+
+    try {
+        // Ambil tiket berdasarkan ID
+        const tiket = await getTiketById(id_tiket);
+
+        if (!tiket) {
+            return res.status(404).json({ message: 'Tiket not found' });
+        }
+
+        // Periksa apakah kursi masih tersedia
+        if (tiket.kursi_tersedia <= 0) {
+            return res.status(400).json({ message: 'No available seats' });
+        }
+
+        // Kurangi jumlah kursi yang tersedia
+        const updatedTiket = await db('tikets')
+            .where({ id: id_tiket })
+            .update({ kursi_tersedia: tiket.kursi_tersedia - 1 });
+
+        if (updatedTiket) {
+            res.status(200).json({ message: 'Tiket berhasil dipesan', tiket: { ...tiket, kursi_tersedia: tiket.kursi_tersedia - 1 } });
+        } else {
+            res.status(500).json({ message: 'Error updating ticket' });
+        }
+    } catch (error) {
+        console.error("Error processing ticket order:", error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
+module.exports = {
+    getTikets,
+    getTiket,
+    createTiketHandler,
+    updateTiketHandler,
+    deleteTiketHandler,
+    searchTiket,
+    pesanTiket  // Export fungsi pesanTiket yang baru
+};

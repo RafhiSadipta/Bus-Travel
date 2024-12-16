@@ -13,7 +13,7 @@
       </div>
 
       <div class="w-full flex flex-row items-center justify-between text-[1rem] text-dark-green">
-        <img class="w-[10rem] h-[6.25rem] object-cover" alt="Logo Agen" src="" />
+        <img class="w-[10rem] h-[6.25rem] object-cover" alt="Logo Agen" :src="`http://localhost:5000${tiket.logo}`" />
         <div class="relative font-semibold text-sm">
           <p class="m-0">{{ tiket.terminal_awal_nama || 'N/A' }} ({{ tiket.terminal_awal_kota || 'N/A' }}) - <br>
             {{ tiket.terminal_akhir_nama || 'N/A' }} ({{ tiket.terminal_akhir_kota || 'N/A' }})</p>
@@ -54,7 +54,7 @@
             <input type="radio" v-model="selectedPaymentMethod" value="qris" class="text-dark-green font-semibold" /> QRIS
           </label>
           <label>
-            <input type="radio" v-model="selectedPaymentMethod" value="transfer" class="text-dark-green font-semibold" /> Transfer Bank
+            <input type="radio" v-model="selectedPaymentMethod" value="transfer_bank" class="text-dark-green font-semibold" /> Transfer Bank
           </label>
         </div>
 
@@ -65,7 +65,7 @@
         </div>
 
         <!-- Bank Transfer Tutorial -->
-        <div v-if="selectedPaymentMethod === 'transfer'" class="text-left">
+        <div v-if="selectedPaymentMethod === 'transfer_bank'" class="text-left">
           <h3 class="font-semibold">Detail Pembayaran</h3>
           <ol class="list-decimal list-inside">
             <li>Buka aplikasi M-Banking yang kamu gunakan</li>

@@ -16,6 +16,7 @@ import KelolaKursi from '../pages/Kursi.vue';
 import KelolaTransaksi from '../pages/Transaksi.vue';
 import Transaksi from '../pages/TransaksiClient.vue';
 import History from '../pages/History.vue';
+import Profile from '../pages/Profile.vue';
 
 const routes = [
     { path: '/', component: Home },            
@@ -29,6 +30,7 @@ const routes = [
             { path: 'result', component: Result, meta: { requiresAuth: true }, name: 'result' },
             { path: 'history', component: History, meta: { requiresAuth: true, role: 'user' }, name: 'history' },
             { path: '/transaksi/:id', name: 'transaksi', component: Transaksi, meta: { requiresAuth: true, role: 'user' } },
+            { path: 'profile', name: 'profile', component: Profile, meta: { requiresAuth: true, role: 'user' } },
             {
                 path: 'kelola-user',
                 component: KelolaUser,

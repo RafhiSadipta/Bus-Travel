@@ -68,7 +68,7 @@ export default {
           role: this.role // Sertakan role dalam permintaan
         });
         alert("Registration successful! You can now log in.");
-        this.$router.push('/'); // Redirect to login page after registration
+        this.$router.push('/login'); // Redirect to login page after registration
       } catch (error) {
         console.error(error);
         alert("Registration failed. Please try again.");

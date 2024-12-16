@@ -68,7 +68,7 @@ export default {
     if (userRole === 'admin') {
       this.$router.push({ path: '/dashboard' });
     } else {
-      this.$router.push({ path: '/result' });
+      this.$router.push({ path: '/' });
     }
   } catch (error) {
     this.errorMessage = 'Login gagal. Periksa kredensial Anda.';

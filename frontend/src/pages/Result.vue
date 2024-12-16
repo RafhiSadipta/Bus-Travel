@@ -54,7 +54,7 @@
           </b>
           <b class="sort-item relative cursor-pointer text-center w-1/6"
             :class="{ active: sortKey === 'kursi_tersedia' }" @click="sortBy('kursi_tersedia')">
-            Kursi Tersedia <span v-if="sortKey === 'kursi_tersedia'">{{ sortOrder === 'asc' ? '▲' : '▼' }}</span>
+            Kapasitas <span v-if="sortKey === 'kursi_tersedia'">{{ sortOrder === 'asc' ? '▲' : '▼' }}</span>
           </b>
           <b class="sort-item relative cursor-pointer text-center w-1/6"></b>
         </div>
@@ -63,7 +63,7 @@
         <div class="w-full flex-1 overflow-hidden flex flex-col items-center justify-center gap-4 text-lg">
           <div v-for="tiket in sortedTikets" :key="tiket.id"
             class="card w-10/12 shadow-[0px_2px_5px_rgba(0,_0,_0,_0.15)] rounded-2xl bg-white overflow-hidden flex flex-row items-center justify-between py-4 px-8 box-border">
-            <img class="w-[10rem] h-[6.25rem] object-cover" alt="Logo Agen" :src="tiket.logo" />
+            <img class="w-[10rem] h-[6.25rem] object-cover" alt="Logo Agen" :src="`http://localhost:5000${tiket.logo}`" />
             <div class="flex flex-col items-start">
               <b class="relative text-sm">{{ formatTanggal(tiket.waktu_berangkat) }}</b>
               <span class="relative text-sm">{{ formatWaktu(tiket.waktu_berangkat) }}</span>
@@ -77,7 +77,7 @@
                 tiket.estimasi_sampai) }}</span>
             </div>
             <b class="relative text-green">Rp. {{ formatHarga(tiket.harga) }}</b>
-            <div class="relative text-[1rem] font-semibold text-dark-green-50">{{ tiket.kursi_tersedia }} kursi tersedia
+            <div class="relative text-[1rem] font-semibold text-dark-green-50">{{ tiket.kursi_tersedia }} kursi
             </div>
             <btn @click="pesanTiket(tiket.id)" class="bg-green text-white font-bold text-sm px-4 py-2 rounded-31xl">
               Pesan Tiket
@@ -111,7 +111,6 @@ export default {
         let aValue = a[this.sortKey];
         let bValue = b[this.sortKey];
 
-        // Konversi ke objek Date jika key adalah keberangkatan atau kedatangan
         if (this.sortKey === 'keberangkatan') {
           aValue = new Date(a.waktu_berangkat);
           bValue = new Date(b.waktu_berangkat);
@@ -119,7 +118,6 @@ export default {
           aValue = new Date(a.estimasi_sampai);
           bValue = new Date(b.estimasi_sampai);
         } else if (this.sortKey === 'durasi') {
-          // Hitung durasi dalam milidetik jika key adalah durasi
           const startA = new Date(a.waktu_berangkat);
           const endA = new Date(a.estimasi_sampai);
           const startB = new Date(b.waktu_berangkat);
@@ -128,7 +126,6 @@ export default {
           bValue = endB - startB;
         }
 
-        // Bandingkan nilai sesuai urutan sortOrder
         let result = 0;
         if (aValue < bValue) result = -1;
         if (aValue > bValue) result = 1;
